@@ -1,0 +1,92 @@
+/* *{
+    font-family:Arial, Helvetica, sans-serif;
+} */
+
+input{
+    margin: 2px !important;
+}
+
+body {
+    overflow: hidden;
+}
+
+button{
+    margin: 2px !important;
+}
+
+#chatbox {
+    float: left;
+    width: 75%;
+    height: 100%;
+    height: calc(100vh - 110px);
+    overflow-y: scroll;
+    padding: 10px;
+    padding-left: 20px;
+}
+#users {
+    float: left;
+    width: 25%;
+    height: calc(100vh - 100px);
+    overflow-y: scroll;
+    padding: 10px;
+    background-color: #f1f0f0;
+    border-radius: unset;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    line-height: 60px;
+    background-color: #f5f5f5;
+    padding-top: 30px;
+    overflow:hidden;
+}
+
+#roomSelector {
+    position: relative;
+    margin-top: 25vh;
+    width: calc(30vw);
+    min-width: 350px;
+}
+
+.float {
+	position:fixed;
+	width:0px;
+	height:0px;
+	bottom:135px;
+	right:30px;
+	color: #343a40;
+	border-radius:50px;
+	text-align:center;
+}
+
+.list-icon {
+    margin-right: 10px !important;
+}
+
+#down-icon {
+    display: none;
+}
+
+.float:hover {
+	color: #fff;
+}
+
+#down-icon:hover {
+	color:#0000ca; !important
+}
+
+.new-unread:after {
+    content:"";
+    position: absolute;
+    background: rgb(255, 0, 0);
+    height:0.5rem;
+    width:0.5rem;
+    text-align: center;
+    line-height: 2rem;;
+    border-radius: 50%;
+    top:0px;
+    right:-1.125em;
+}
