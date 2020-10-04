@@ -24,22 +24,26 @@ io.on('connection', (socket) => {
         socket.username = user
         socket.roomname = room
         chatroom.joinRoom(socket, room)
-        console.log(user, socket.rooms)
+        console.log(user, 'joined', room)
         socket.to(room).broadcast.emit('messageStream', chatroom.createMessage(`${user} has joined the room`, 'system'))
         io.to(room).emit('roomUserData', users.sort(), room)
+        if(options.reply){
+            console.log(user, 'rejoined', room)
+            io.to(room).emit('messageStream', chatroom.createMessage(options.reply, options.type, user))
+        }
         callback()
     })
 
     socket.on('reply', (reply, type, callback) => {
         const user = socket.username
         const room = socket.roomname
-        console.log(user, socket.rooms)
         if(user && room) {
             console.log(user,'emitting to', room)
             io.to(room).emit('messageStream', chatroom.createMessage(reply, type, user))
             return callback()
         }
-        callback('No rooms joined')
+        console.log('New socket not in room',socket.id)
+        callback('No rooms joined',reply, type)
     })
 
     socket.on('disconnect', () => {
@@ -49,7 +53,6 @@ io.on('connection', (socket) => {
         if(user && room) {
             console.log(user, 'left', room, socket.id)
             const users = chatroom.getUsersInRoom(io, room)
-            console.log(users)
             io.to(room).emit('messageStream', chatroom.createMessage(`${user} left the room`, 'system'))
             io.to(room).emit('roomUserData', users.sort(), room)
         }

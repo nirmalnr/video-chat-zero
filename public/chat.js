@@ -57,10 +57,15 @@ $('#chat').submit( (event) => {
         return 
     } 
     $('#send-message').prop('disabled', true)
-    socket.emit('reply', $('#message').val(), 'message', (error) => {
+    socket.emit('reply', $('#message').val(), 'message', (error, reply, type) => {
         if(error) {
-            alert(error)
-            location.href = '/'
+            console.log(error, reply, type)
+            socket.emit('join', {...query, reply, type}, (error)=> {
+                if(error){
+                    alert(error)
+                    location.href = '/'
+                }
+            })
         }
         $('#send-message').prop('disabled', false)
     })
@@ -73,10 +78,15 @@ $('#share-location').click( () => {
     }
     $('#share-location').prop('disabled', true)
     navigator.geolocation.getCurrentPosition( (position) => {
-        socket.emit('reply', `${position.coords.latitude}, ${position.coords.longitude}`, 'location', (error) => {
+        socket.emit('reply', `${position.coords.latitude}, ${position.coords.longitude}`, 'location', (error, reply, type) => {
             if(error) {
-                alert(error)
-                location.href = '/'
+                console.log(error, reply, type)
+                socket.emit('join', {...query, reply, type}, (error)=> {
+                    if(error){
+                        alert(error)
+                        location.href = '/'
+                    }
+                })
             }
             $('#share-location').prop('disabled', false)
         })
