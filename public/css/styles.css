@@ -90,3 +90,9 @@ button{
     top:0px;
     right:-1.125em;
 }
+
+#meet {
+    position: absolute;
+    top: 0px;
+    right:0px;
+}

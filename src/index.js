@@ -2,6 +2,7 @@ const http = require('http')
 const socketio = require('socket.io')
 const app = require('./app')
 const chatroom = require('./utils/chatroom')
+const crypto = require('crypto')
 
 const server = http.createServer(app)
 const io = socketio(server)
@@ -10,13 +11,14 @@ const port = process.env.PORT
 
 io.on('connection', (socket) => {
     console.log('Client connected', socket.id)
-    socket.emit('messageStream', chatroom.createMessage('Connected to server...', 'system'))
+    socket.emit('messageStream', chatroom.createMessage('Connected to server.', 'system'))
 
     socket.on('join', (options, callback) => {
         const user = options.username
         const room = options.roomname
         console.log(user, 'attemped to join', room, socket.id)
         if(chatroom.checkUserInRoom(io, user, room)) {
+            console.log(user, 'already present in', room)
             callback('User already present in room')
         }
         users = chatroom.getUsersInRoom(io, room)
@@ -25,7 +27,11 @@ io.on('connection', (socket) => {
         socket.roomname = room
         chatroom.joinRoom(socket, room)
         console.log(user, 'joined', room)
-        socket.to(room).broadcast.emit('messageStream', chatroom.createMessage(`${user} has joined the room`, 'system'))
+        let sysMessage = chatroom.createMessage(`Connected to room.`, 'system', user)
+        sysMessage.key = `${crypto.createHash('sha1').update(room).digest('hex')},${process.env.JITSI_DOMAIN}`
+        console.log(sysMessage)
+        socket.emit('messageStream', sysMessage)
+        socket.to(room).broadcast.emit('messageStream', chatroom.createMessage(`${user} has joined the room`, 'system', user))
         io.to(room).emit('roomUserData', users.sort(), room)
         if(options.reply){
             console.log(user, 'rejoined', room)
@@ -42,7 +48,7 @@ io.on('connection', (socket) => {
             io.to(room).emit('messageStream', chatroom.createMessage(reply, type, user))
             return callback()
         }
-        console.log('New socket not in room',socket.id)
+        console.log('New socket not in any room', socket.id)
         callback('No rooms joined',reply, type)
     })
 

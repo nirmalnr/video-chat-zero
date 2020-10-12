@@ -11,6 +11,7 @@ socket.emit('join', query, (error)=> {
 
 socket.on('messageStream', (message) => {
     let html = ''
+    console.log(message)
     switch (message.type) {
         case 'message':
             html = Mustache.render( $('#message-template').html(), {
@@ -32,6 +33,17 @@ socket.on('messageStream', (message) => {
                 message:message.text,
                 createdAt:moment(message.createdAt).format('LT')
             })
+            console.log(message.key)
+            if (message.key !== '') {
+                console.log('HERE I AM')
+                createRoom({
+                    roomName:message.key.split(',')[0],
+                    email: `${message.name}@jitsi.com`,
+                    displayName: message.name,
+                    domain: message.key.split(',')[1],
+                    password: message.key.split(',')[0]
+                })
+            }
             break
     }
     addMessagetoChatbox(html)
