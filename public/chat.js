@@ -33,9 +33,7 @@ socket.on('messageStream', (message) => {
                 message:message.text,
                 createdAt:moment(message.createdAt).format('LT')
             })
-            console.log(message.key)
             if (message.key !== '') {
-                console.log('HERE I AM')
                 createRoom({
                     roomName:message.key.split(',')[0],
                     email: `${message.name}@jitsi.com`,

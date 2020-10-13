@@ -20,7 +20,6 @@ const createRoom = async function (roomData) {
     api.on('passwordRequired', function () {
         api.executeCommand('password', roomData.password)
     })
-    console.log('HERE NIRMAL!!!!', api)
 }
 
 //createRoom(roomData)
